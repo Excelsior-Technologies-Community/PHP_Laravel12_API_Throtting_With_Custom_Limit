@@ -1,4 +1,12 @@
-# PHP Laravel 12 API Throttling With Custom Limits
+# PHP_Laravel12_API_Throtting_With_Custom_Limit
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Laravel-12-red" alt="Laravel 12">
+  <img src="https://img.shields.io/badge/PHP-8.2+-blue" alt="PHP Version">
+  <img src="https://img.shields.io/badge/Auth-Sanctum-green" alt="Sanctum Auth">
+  <img src="https://img.shields.io/badge/API-Throttling-orange" alt="API Throttling">
+  <img src="https://img.shields.io/badge/License-MIT-lightgrey" alt="License">
+</p>
 
 ##  Overview
 
@@ -21,7 +29,7 @@ This guide explains how to build a secure API system with:
 
 ---
 
-##  Folder Structure (Important Files)
+##  Folder Structure
 
 ```
 app/
