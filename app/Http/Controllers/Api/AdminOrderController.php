@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class AdminOrderController extends Controller
 {
@@ -11,7 +10,8 @@ class AdminOrderController extends Controller
     {
         return response()->json([
             'status' => true,
-            'orders' => []
+            'message' => 'Admin orders retrieved successfully.',
+            'orders' => [],
         ]);
     }
 }
