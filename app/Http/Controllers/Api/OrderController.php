@@ -8,12 +8,12 @@ use Illuminate\Http\Request;
 class OrderController extends Controller
 {
     public function store(Request $request)
-{
-    return response()->json([
-        'status' => true,
-        'message' => 'Order placed successfully',
-        'user_id' => $request->user()->id
-    ]);
-}
-
+    {
+        return response()->json([
+            'status' => true,
+            'message' => 'Order placed successfully.',
+            'user_id' => $request->user()->id,
+            'role' => $request->user()->role,
+        ]);
+    }
 }

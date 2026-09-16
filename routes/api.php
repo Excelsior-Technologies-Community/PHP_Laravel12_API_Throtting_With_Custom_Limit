@@ -1,33 +1,113 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Api\TestController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\AdminOrderController;
+use App\Http\Controllers\Api\RateLimitController;
+use App\Http\Controllers\Api\ThrottleViolationController;
 
 
 /*
 |--------------------------------------------------------------------------
-| API Routes
+| Public API
 |--------------------------------------------------------------------------
 */
 
-// Default API throttle (60 req/min)
+// General API throttle: 60 requests/minute
 Route::middleware('throttle:api')->group(function () {
-    Route::get('/test', [TestController::class, 'index']);
+
+    Route::get('/test', [
+        TestController::class,
+        'index'
+    ]);
+
 });
 
-// Strict login throttle
-Route::post('/login', [AuthController::class, 'login'])
-    ->middleware('throttle:login');
 
-// Order throttle (20/min)
-Route::middleware(['auth:sanctum', 'throttle:orders'])->group(function () {
-    Route::post('/orders', [OrderController::class, 'store']);
+/*
+|--------------------------------------------------------------------------
+| Authentication
+|--------------------------------------------------------------------------
+*/
+
+// Login throttle: 5 attempts/minute/IP
+Route::post('/login', [
+    AuthController::class,
+    'login'
+])->middleware('throttle:login');
+
+
+/*
+|--------------------------------------------------------------------------
+| Authenticated Customer/Admin APIs
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware([
+    'auth:sanctum',
+    'throttle:orders'
+])->group(function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Place Order
+    |--------------------------------------------------------------------------
+    */
+
+    Route::post('/orders', [
+        OrderController::class,
+        'store'
+    ]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Rate Limit Status
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/rate-limit/status', [
+        RateLimitController::class,
+        'status'
+    ]);
+
 });
 
-// Admin high-limit APIs
-Route::middleware(['auth:sanctum', 'throttle:admin-api'])->group(function () {
-    Route::get('/admin/orders', [AdminOrderController::class, 'index']);
+
+/*
+|--------------------------------------------------------------------------
+| Admin APIs
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware([
+    'auth:sanctum',
+    'is_admin',
+    'throttle:admin-api'
+])->group(function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Orders
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/admin/orders', [
+        AdminOrderController::class,
+        'index'
+    ]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Throttle Violation Monitoring
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/admin/throttle-violations', [
+        ThrottleViolationController::class,
+        'index'
+    ]);
+
 });
